@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+{% extends 'textutiles.html' %} {%block body%}
+{%load static%}
+<html>
+  <head>
+    <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+            crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="{% static 'css/pdfhomepage.css'%}">
+    <title>Lock PDF</title>
+  </head>
+  <br />
+  <br />
+  <br />
+  <br />
+
+  <body>
+  <div id="mySidenav" class="sidenav">
+    <a href="{% url 'mergepdf' %}"id="about" value="load">Mergepdf</a>
+    <a href="{% url 'compress' %}" id="blog">compress</a>
+    <a href="{% url 'lock' %}" id="projects">lock</a>
+    <a href="{% url 'unlock' %}" id="contact">Unlock</a>
+  </div>
+    <div class="text-center">
+      <form action="/lock" method="POST"  enctype="multipart/form-data">
+        {% csrf_token %}
+        <label >Select PDF File:</label>
+        <input type="file" name="pdf1" id ="pdf1" accept="pdf/*" />
+        <label >Type Password :</label>
+        <input type = "text" name= "password_text" id= "password_text">
+
+        <br>
+        <br>
+        <br>
+        <br>
+
+        <button type="submit" class="btn btn-primary"  value="click">
+          Upload & Download
+        </button>
+        
+        {% if uploaded_file_url %}
+    <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+  {% endif %}
+
+
+
+
+      </form>
+    </div>
+
+  </body>
+</html>
+{% endblock %}

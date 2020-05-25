@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+{% extends 'textutiles.html' %} {%block body%}
+{% load static%}
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/textarea.css'%}" >
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <!--Typed.js-->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/typed.js"></script>
+
+  <title>Text Utils</title>
+</head>
+
+
+<br />
+<br />
+
+
+<div class="container">
+  <center>
+    <h2 style="color: purple;">
+      <a
+        class="typewrite"
+        data-period="2"
+        data-type='[ "What You can do....", "Remove Punctuation", "Remove UpperCase" ,"Remove LowerCase"," Remove Newline ","Remove Number ","Remove ExtraSpace"]'
+      >
+        <span class="wrap"></span>
+      </a>
+    </h2>
+  </center>
+  <br/>
+  <form action="/analyze" method="POST">
+    {% csrf_token %}
+    <center>
+      <div class="form-group">
+      <h3><span id="typed"></span></h3>
+
+      <textarea
+        class="form-control"
+        name="input_text"
+        id="exampleFormControlTextarea1"
+        rows="9">
+      </textarea>
+
+      <!-- Word Counter -->
+      <p>
+        <span id="wordCount">0</span> Characters
+        <script type="text/javascript">
+          var exampleFormControlTextarea1 = document.getElementById(
+            "exampleFormControlTextarea1"
+          );
+          var wordCount = document.getElementById("wordCount");
+
+          exampleFormControlTextarea1.addEventListener("keyup", function () {
+            var characters = exampleFormControlTextarea1.value.split("");
+            wordCount.innerText = characters.length;
+          });
+        </script>
+      </p>
+    </div>
+    </center>
+
+    <div  style="width: 800px;">
+      <div style="width: 300px; float: left;">
+        <div class="custom-control custom-switch ">
+          <input type="checkbox" name="removepunc" class="custom-control-input" id="customSwitch1">
+          <label class="custom-control-label" for="customSwitch1">Remove Punctuations</label>
+        </div>
+
+
+        <div class="custom-control custom-switch">
+          <input type="checkbox" name="fullcaps" class="custom-control-input" id="customSwitch2">
+          <label class="custom-control-label" for="customSwitch2">Upper Case</label>
+        </div>
+
+        <div class="custom-control custom-switch">
+          <input type="checkbox"  name="newlineremover" class="custom-control-input" id="customSwitch3">
+          <label class="custom-control-label" for="customSwitch3">New Line Remover</label>
+        </div>
+      </div>
+
+      <div style="width: 300px; float: right;">
+        <div class="custom-control custom-switch">
+          <input type="checkbox"  name="extraspaceremover" class="custom-control-input" id="customSwitch4">
+          <label class="custom-control-label" for="customSwitch4">Extra Spaces Remover</label>
+        </div>
+
+        <div class="custom-control custom-switch">
+          <input type="checkbox"  name="numberremover" class="custom-control-input" id="customSwitch5">
+          <label class="custom-control-label" for="customSwitch5">Number Remover</label>
+        </div>
+
+
+        <div class="custom-control custom-switch">
+          <input type="checkbox"  name="lowercase" class="custom-control-input" id="customSwitch6">
+          <label class="custom-control-label" for="customSwitch6">Lower Case</label>
+        </div>
+      </div>
+    </div>
+<br/>
+    <br/>
+    <br/>
+    <br/>
+    <div style="text-align: center;">
+      <button type="submit" class="btn btn-dark mt-2">Analyze Text</button>
+    </div>
+  </form>
+</div>
+<div id="typed-strings"></div>
+
+<script>
+  var typed = new Typed("#typed", {
+    strings: [
+      "You can do anything with your text here!",
+      "Enter your text here and let Text Utils do the magic!",
+    ],
+    backSpeed: 15,
+    smartBackspace: true,
+    backDelay: 1200,
+    startDelay: 1000,
+    typeSpeed: 25,
+    loop: false,
+  });
+</script>
+
+<script>
+  var TxtType = function (el, toRotate, period) {
+    this.toRotate = toRotate;
+    this.el = el;
+    this.loopNum = 0;
+    this.period = parseInt(period, 10) || 2000;
+    this.txt = "";
+    this.tick();
+    this.isDeleting = false;
+  };
+
+  TxtType.prototype.tick = function () {
+    var i = this.loopNum % this.toRotate.length;
+    var fullTxt = this.toRotate[i];
+
+    if (this.isDeleting) {
+      this.txt = fullTxt.substring(0, this.txt.length - 1);
+    } else {
+      this.txt = fullTxt.substring(0, this.txt.length + 1);
+    }
+
+    this.el.innerHTML = '<span class="wrap">' + this.txt + "</span>";
+
+    var that = this;
+    var delta = 200 - Math.random() * 100;
+
+    if (this.isDeleting) {
+      delta /= 2;
+    }
+
+    if (!this.isDeleting && this.txt === fullTxt) {
+      delta = this.period;
+      this.isDeleting = true;
+    } else if (this.isDeleting && this.txt === "") {
+      this.isDeleting = false;
+      this.loopNum++;
+      delta = 500;
+    }
+
+    setTimeout(function () {
+      that.tick();
+    }, delta);
+  };
+
+  window.onload = function () {
+    var elements = document.getElementsByClassName("typewrite");
+    for (var i = 0; i < elements.length; i++) {
+      var toRotate = elements[i].getAttribute("data-type");
+      var period = elements[i].getAttribute("data-period");
+      if (toRotate) {
+        new TxtType(elements[i], JSON.parse(toRotate), period);
+      }
+    }
+    // INJECT CSS
+    var css = document.createElement("style");
+    css.type = "text/css";
+    css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #fff}";
+    document.body.appendChild(css);
+  };
+</script>
+{% endblock%}

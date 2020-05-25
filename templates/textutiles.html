@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!-- base html file(only header) for textutiles,code Beautifier and pdf Operation   -->
+
+{% load static %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Textutiles</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/textutiles.css'%}">
+<!--    <script src="https://kit.fontawesome.com/a076d05399.js"></script>-->
+    <style>
+        #GFG {
+            text-decoration: none;
+        }
+    </style>
+  </head>
+<body>
+    <nav>
+      
+     
+        
+      </label>
+      <label class="logo">Recon Utility</label>
+      <ul style="text-decoration: none;">
+<li><a  id = "GFG" style='color:white' href="{% url 'index' %}">Home</a></li>
+<li><a id = "GFG" style='color:white' href="{% url 'textutiles' %}">Textutils</a></li>
+<li><a id = "GFG" style='color:white' href="{% url 'codebeautifier' %}">Code Beautifier</a></li>
+<li><a id = "GFG" style='color:white' href="{% url 'mergepdf' %}">Pdf Operation</a></li>
+
+</ul>
+</nav>
+{% block body %} {% endblock %}<br>
+
+</body>
+
+</html>
